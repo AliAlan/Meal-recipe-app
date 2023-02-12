@@ -1,91 +1,47 @@
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from './page.module.css'
+import Image from "next/image";
+import { Modak, Space_Grotesk } from "@next/font/google";
+import styles from "./page.module.css";
+import { MealToday } from "./components/MealToday";
 
-const inter = Inter({ subsets: ['latin'] })
-
-export default function Home() {
+const modak = Modak({ subsets: ["latin"], weight: ["400"] });
+const groteks = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
+async function fetchRandomMeal() {
+  const res = await fetch(
+    "https://api.unsplash.com/search/photos/?page=1&query=kuş&client_id=SKUo7MPw2xgZCQsNsxNO1HXb1jpB1ceKmAH2CwOfxgQ",
+    {
+      next: { revalidate: 100000 },
+    }
+  );
+  return await res.json();
+}
+export default async function Home() {
+  const data = fetchRandomMeal();
+  console.log("ali");
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <main style={{ height: "90vh" }} className={groteks.className}>
+      <section className="grid grid-cols-2 px-4 py-4 max-w-7xl mx-auto h-full w-full">
+        <section className=" h-full p-4">
+          <h1
+            className={`text-9xl leading text-blue ${modak.className} relative`}
           >
-            By{' '}
+            FOOD RECIPES
             <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-        <div className={styles.thirteen}>
-          <Image src="/thirteen.svg" alt="13" width={40} height={31} priority />
-        </div>
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://beta.nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+              className="absolute top-0 right-6 -z-10"
+              width={154}
+              height={154}
+              src="/star.png"
+            ></Image>
+          </h1>
+          <MealToday result={data} />
+        </section>
+        <section className="flex flex-col  h-full">
+          <article className="h-full w-full bg-black-500">1</article>
+          <article className="bg-orange-500 h-full w-full ">2</article>
+        </section>
+      </section>
     </main>
-  )
+  );
 }
