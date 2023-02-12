@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { Modak, Space_Grotesk } from "@next/font/google";
-import styles from "./page.module.css";
 import { MealToday } from "./components/MealToday";
 
 const modak = Modak({ subsets: ["latin"], weight: ["400"] });
@@ -10,16 +9,17 @@ const groteks = Space_Grotesk({
 });
 async function fetchRandomMeal() {
   const res = await fetch(
-    "https://api.unsplash.com/search/photos/?page=1&query=kuş&client_id=SKUo7MPw2xgZCQsNsxNO1HXb1jpB1ceKmAH2CwOfxgQ",
-    {
-      next: { revalidate: 100000 },
-    }
+    `https://api.spoonacular.com/recipes/random?number=1&tags=vegetarian,dessert&apiKey=39d45075302041d5b84b81e061f98152`
   );
-  return await res.json();
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error("Failed to fetch data");
+  }
+  return res.json();
 }
 export default async function Home() {
-  const data = fetchRandomMeal();
-  console.log("ali");
+  const data = await fetchRandomMeal();
+
   return (
     <main style={{ height: "90vh" }} className={groteks.className}>
       <section className="grid grid-cols-2 px-4 py-4 max-w-7xl mx-auto h-full w-full">
@@ -35,7 +35,7 @@ export default async function Home() {
               src="/star.png"
             ></Image>
           </h1>
-          <MealToday result={data} />
+          <MealToday data={data.recipes[0]} />
         </section>
         <section className="flex flex-col  h-full">
           <article className="h-full w-full bg-black-500">1</article>
